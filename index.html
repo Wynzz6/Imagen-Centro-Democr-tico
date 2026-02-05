@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Generador de imagen</title>
+
+  <!-- Fuente elegante y fina -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      text-align: center;
+      padding: 20px;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 260px;
+      margin-bottom: 15px;
+    }
+
+    canvas {
+      display: block;
+      margin: 20px auto;
+      max-width: 100%;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <input
+    type="text"
+    id="nombre"
+    placeholder="Escribe el nombre"
+  >
+
+  <canvas id="canvas"></canvas>
+
+  <button onclick="descargarImagen()">Descargar imagen</button>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const imagen = new Image();
+    imagen.src = "imagen.jpg"; // imagen base SIN texto
+
+    imagen.onload = () => {
+      canvas.width = imagen.width;
+      canvas.height = imagen.height;
+      dibujar("");
+    };
+
+    document.getElementById("nombre").addEventListener("input", (e) => {
+      dibujar(e.target.value);
+    });
+
+    function dibujar(nombre) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(imagen, 0, 0);
+
+      ctx.textAlign = "left";
+
+      // ---- TEXTO "SOY" ----
+      ctx.fillStyle = "#c61d1d";
+      ctx.font = `italic 45px "Playfair Display"`;
+      ctx.fillText(
+        "Soy",
+        canvas.width * 0.34,
+        canvas.height * 0.76
+      );
+
+      // ---- NOMBRE (DINÁMICO) ----
+      let size = 56;
+      if (nombre.length > 18) size = 38;
+      if (nombre.length > 25) size = 34;
+
+      ctx.font = `italic ${size}px "Playfair Display"`;
+      ctx.fillText(
+        nombre,
+        canvas.width * 0.42,
+        canvas.height * 0.76
+      );
+
+      // ---- TEXTO INTERMEDIO ----
+      ctx.fillStyle = "#1f3b66";
+      ctx.font = `italic 38px "Playfair Display"`;
+      ctx.fillText(
+        "y mi voto es por el",
+        canvas.width * 0.34,
+        canvas.height * 0.82
+      );
+
+      // ---- TEXTO PRINCIPAL ----
+      ctx.font = `italic 56px "Playfair Display"`;
+      ctx.fillText(
+        "Centro Democrático",
+        canvas.width * 0.26,
+        canvas.height * 0.89
+      );
+    }
+
+    // 🔧 FUNCIÓN CORREGIDA (ÚNICO CAMBIO)
+    function descargarImagen() {
+      const link = document.createElement("a");
+      link.download = "imagen.png";
+      link.href = canvas.toDataURL("image/png");
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+
+</body>
+</html>
